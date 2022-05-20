@@ -1,15 +1,28 @@
-#ifndef RECORD_H
-#define RECORD_H
+#ifndef Record_H
+#define Record_H
  
-/********************************************************** 
- *    判斷 record 並根據不同的 record 選擇不同的 struct    *
- **********************************************************/
-
-#define MAXLENGTH 100
-#define MAX_LINE_SIZE 1000
+/*********************** 
+ * record  相關之函式 *
+ ***********************/
 
 //different record type have different struct
 
-void record_path(void);
+struct Record{
+	int year, month, day, bld;
+	float weight, heat, metabolism;
+	struct Record *next;
+};
+
+struct Record *Read_File(FILE *fp, int record);
+
+void View(struct Record *Head, int record);
+
+void Insert(struct Record **Head, int record, int gender, int age, float height);
+
+void Delete(struct Record **Head, int record);
+
+void Modify(struct Record *Head, int record, int gender, int age, float height);
+
+int Search(struct Record *Head, int y, int m, int d, int type, int bld);
 
 #endif

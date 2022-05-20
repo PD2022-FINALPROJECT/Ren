@@ -47,7 +47,7 @@ void create_marks_csv( int sim_or_det, int recommend_diet, int record_type, floa
 		    	fprintf(fp,",Heat,BLD\n");
 		
 		fclose(fp);
-		printf("\n %sfile created\n\n",filename);
+		printf("\n%sfile created\n\n",filename);
 		return;
     	}
 	
@@ -67,7 +67,7 @@ void create_marks_csv( int sim_or_det, int recommend_diet, int record_type, floa
 		fprintf(fp,",Heat,BLD\n");
 	
 	fclose(fp);
-	printf("\n%sfile created\n\n",filename);
+	printf("\n%s file created\n\n",filename);
 	return;
 	
 }

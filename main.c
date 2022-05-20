@@ -4,7 +4,7 @@
 #include <ctype.h>
 
 #include "first.h"
-#include "record.h"
+#include "path.h"
 #include "recommend_and_heat_calculate.h"
 
 #define DEBUG 1
@@ -43,7 +43,7 @@ int main(void){
 		}
 	}	
 	else{
-		record_path();
+		path();
 	}
 
 	return 0;
