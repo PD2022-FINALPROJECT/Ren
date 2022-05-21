@@ -25,4 +25,6 @@ void Modify(struct Record *Head, int record, int gender, int age, float height);
 
 int Search(struct Record *Head, int y, int m, int d, int type, int bld);
 
+void Write_File(FILE *fp, struct Record *Head, int record, int node_number);
+
 #endif

@@ -26,7 +26,7 @@ void path(void){
 	}
 	
 	//開啟csv檔
-	FILE *fp;
+	FILE *fp, *fp_r, *fp_w;
     	fp = fopen(file_name, "r");
     	
     	while(!fp){
@@ -46,9 +46,10 @@ void path(void){
     	//讀取第一次填的數值
     	while(fgets(line, MAX_LINE_SIZE, fp) != NULL) {
     		
-        	result = strtok(line, ",");
+        		result = strtok(line, ",");
         	
-        	if(!isalpha(*result) && !check_record){
+		
+        		if(!isalpha(*result) && !check_record){
             			record = atoi(result);
             			check_record++;
             			
@@ -70,20 +71,28 @@ void path(void){
             			}
             				
             			
-            	}
+            		}
    
-        	if(check_record && isalpha(*result))
+        		if(check_record && isalpha(*result))
     			break;
     	}
-    	fgets(line, MAX_LINE_SIZE, fp);
     	
     	#if DEBUG
     	printf("record %d\n", record);
     	#endif
-    	
+
     	struct Record *Head = NULL;
-	
 	Head = Read_File(fp, record);
+	
+	printf("1\n");
+	//檢查link list node數目
+	struct Record *temp;
+	temp = Head;
+	int node_number = 0;
+	while(temp){
+		temp = temp->next;
+		node_number++;
+	}
 	
 	int vi;
 	    	
@@ -111,13 +120,32 @@ void path(void){
 	    		case 4:
 	    			Modify(Head, record, gender, age, height);
 	    			break;
-	    		case 5:
-	    			return;
-	    	
 		}
+		if(vi == 5)
+			break;
 	}
 	
-    	fclose (fp);
+	fclose (fp);
+	
+	//重新開啟file並執行讀取寫入的動作
+	fp_w = fopen(file_name, "r+");
+	
+	check_record = 0;
+	
+	//將fp移至輸入的位置
+	while( fgets(line, MAX_LINE_SIZE, fp) ) {
+        	
+        		f(!isalpha(*result) && !check_record)
+            			check_record++;
+            	
+            		if(check_record && isalpha(*result))
+    			break;
+    			
+       	 }
+	
+	Write_File(fp_w, Head, record, node_number);
+	
+    	fclose (fp_w);
     
     	return;
 }
