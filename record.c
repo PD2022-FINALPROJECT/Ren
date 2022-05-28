@@ -14,8 +14,6 @@ struct Record *Read_File(FILE *fp_r, int record){
     	
     	struct Record *head, *current;
     	
-	//針對不同的record
-	//選擇讀取的內容不同
     	while( fgets(line, MAX_LINE_SIZE, fp_r) ){	
     		cnt++;
     		
@@ -58,8 +56,6 @@ struct Record *Read_File(FILE *fp_r, int record){
     		}
     	}
     	
-	//假如沒有讀取到任何東西
-	//則返回NULL
     	if(!cnt)
     		return NULL;
     	
@@ -148,7 +144,7 @@ void Insert(struct Record **Head, int record,  int gender, int age, float height
 	if( record == 1 ){
 		printf("\n");
 		scanf("%d %d %d %f", &y, &m, &d, &w);
-		while(!y || !m || !d || !w || (y < 0) || (m < 0) || (d < 0) || (w < 0) ){
+		while(!y || !m || !d || !w || (y < 0) || (m < 0) || (d < 0) || (w < 0) || (m > 12) || (d > 31)){
 			printf("\nPlease input the data as example\n");
 			scanf("%d %d %d %f", &y, &m, &d, &w);
 		}
@@ -157,14 +153,12 @@ void Insert(struct Record **Head, int record,  int gender, int age, float height
 	else{
 		printf(" 1682.2\n");
 		scanf("%d %d %d %f %f", &y, &m, &d, &w, &h);
-		while(!y || !m || !d || !w || (y < 0) || (m < 0) || (d < 0) || (w < 0) ){
+		while(!y || !m || !d || !w || (y < 0) || (m < 0) || (d < 0) || (w < 0) || (m > 12) || (d > 31)){
 			printf("\nPlease input the data as example\n");
 			scanf("%d %d %d %f %f", &y, &m, &d, &w, &h);
 		}
 	}
 	
-	//假如record為3或5
-	//則需要填入登記的為哪一餐
 	if( record == 3 || record == 5 ){
 		printf("[1] breakfast [2] lunch [3] dinner\n");
 		scanf("%d", &b);
@@ -199,18 +193,11 @@ void Insert(struct Record **Head, int record,  int gender, int age, float height
 		return;
 	}
 	
-	//檢查輸入的日期是否已經存在
 	int check;
 	check = Search(temp, y, m, d, 1, b);
 	
-	if(!check)
-		return;
-
-	//將temp先移至next
 	temp = temp->next;
 	
-	//若current node的年月日 > 插入的年月日
-	//則安插至current前面
 	if( ( current->year > temp_insert->year) ){
 		*Head = temp_insert;
 		temp_insert->next = current;
@@ -231,7 +218,6 @@ void Insert(struct Record **Head, int record,  int gender, int age, float height
 		}
 	}
 	
-	//同上但此時用temp檢查
 	while( current->next ){
 		
 		if( ( temp->year > temp_insert->year) ){
@@ -302,14 +288,12 @@ void Delete(struct Record **Head, int record){
 		}
 	}
 	
-	//檢查要刪除的data是否存在
 	int check;
 	check = Search(temp, y, m, d, 2, b);
 	
 	if(!check)
 		return;
 	
-	//找到日期並刪除
 	temp = temp->next;
 	if( (record == 3) || (record == 5)){
 		if( ( current->year == y ) && ( current->month == m ) && ( current->day == d ) &&( current->bld == b )){
@@ -396,7 +380,7 @@ void Modify(struct Record *Head, int record, int gender, int age, float height){
 	printf("\nPlease input the date you want to modify as below\n");
 	printf("example:2022 5 5\n");
 	scanf("%d %d %d", &y, &m, &d);
-	while(!y || !m || !d || (y < 0) || (m < 0) || (d < 0) ){
+	while(!y || !m || !d || (y < 0) || (m < 0) || (d < 0)  || (m > 12) || (d > 31)){
 		printf("\nPlease input the data as example\n");
 		scanf("%d %d %d", &y, &m, &d);
 	}
@@ -507,10 +491,6 @@ void Write_File(FILE *fp, struct Record *Head, int record, int node_number){
 	char *result = NULL;
 	
 	int check = 0;
-	
-	//將資料寫入csv檔內
-	//同時若因刪除而link list node數量少於之前的數量
-	//則將此部分補NULL進入
 	switch (record)
 	{
 		case 1:
@@ -566,6 +546,74 @@ void Write_File(FILE *fp, struct Record *Head, int record, int node_number){
 			while(check < node_number){
 				fprintf(fp, "NULL,NULL,NULL,NULL,NULL,NULL,NULL\n");
 				check++;
+			}
+			break;
+	}
+}
+
+//用link list 創一個繪圖的csv檔
+void Create_Draw_Csv_File(FILE *fp, struct Record *Head, int record, int node_number){
+	struct Record *csv_ptr, *current, *prior, *temp_delete;
+	csv_ptr = Head;
+	
+	char line[MAX_LINE_SIZE];
+	char *result = NULL;
+	
+	
+	if( (record == 3) || (record == 5) ){
+		current = csv_ptr->next;
+		prior = csv_ptr;
+		while(current){
+			struct Record *temp_delete = current;
+			if( (current->year == prior->year) && (current->month == prior->month) && (current->day == prior->day) && (current->bld != prior->bld) ){
+				prior->heat = prior->heat + current->heat;
+				prior->next = current->next;
+				current = current->next;
+				free(temp_delete);
+			}
+			else{
+				prior = current;
+				current = current->next;
+			}
+		}
+	}
+	
+	int check = 0;
+	switch (record)
+	{
+		case 1:
+			while(csv_ptr){
+				check++;
+				fprintf(fp, "%d,%d,%d,%.1f\n", csv_ptr->year, csv_ptr->month, csv_ptr->day, csv_ptr->weight);
+				csv_ptr = csv_ptr->next;
+			}
+			break;
+		case 2:
+			while(csv_ptr){
+				check++;
+				fprintf(fp, "%d,%d,%d,%.1f, %.1f\n", csv_ptr->year, csv_ptr->month, csv_ptr->day, csv_ptr->weight, csv_ptr->heat);
+				csv_ptr = csv_ptr->next;
+			}
+			break;
+		case 3:
+			while(csv_ptr){
+				check++;
+				fprintf(fp, "%d,%d,%d,%.1f,%.1f\n", csv_ptr->year, csv_ptr->month, csv_ptr->day, csv_ptr->weight, csv_ptr->heat);
+				csv_ptr = csv_ptr->next;
+			}
+			break;
+		case 4:
+			while(csv_ptr){
+				check++;
+				fprintf(fp, "%d,%d,%d,%.1f,%.1f,%.1f\n", csv_ptr->year, csv_ptr->month, csv_ptr->day, csv_ptr->weight, csv_ptr->metabolism, csv_ptr->heat);
+				csv_ptr = csv_ptr->next;
+			}
+			break;
+		case 5:
+			while(csv_ptr){
+				check++;
+				fprintf(fp, "%d,%d,%d,%.1f,%.1f,%.1f\n", csv_ptr->year, csv_ptr->month, csv_ptr->day, csv_ptr->weight, csv_ptr->metabolism, csv_ptr->heat);
+				csv_ptr = csv_ptr->next;
 			}
 			break;
 	}

@@ -26,7 +26,7 @@ void path(void){
 	}
 	
 	//開啟csv檔
-	FILE *fp, *fp_r, *fp_w;
+	FILE *fp;
     	fp = fopen(file_name, "r");
     	
     	while(!fp){
@@ -46,10 +46,9 @@ void path(void){
     	//讀取第一次填的數值
     	while(fgets(line, MAX_LINE_SIZE, fp) != NULL) {
     		
-        		result = strtok(line, ",");
+        	result = strtok(line, ",");
         	
-		
-        		if(!isalpha(*result) && !check_record){
+        	if(!isalpha(*result) && !check_record){
             			record = atoi(result);
             			check_record++;
             			
@@ -71,9 +70,9 @@ void path(void){
             			}
             				
             			
-            		}
+            	}
    
-        		if(check_record && isalpha(*result))
+        	if(check_record && isalpha(*result))
     			break;
     	}
     	
@@ -127,25 +126,31 @@ void path(void){
 	
 	fclose (fp);
 	
-	//重新開啟file並執行讀取寫入的動作
+	FILE *fp_w;
 	fp_w = fopen(file_name, "r+");
 	
 	check_record = 0;
 	
-	//將fp移至輸入的位置
 	while( fgets(line, MAX_LINE_SIZE, fp) ) {
         	
-        		f(!isalpha(*result) && !check_record)
+        	if(!isalpha(*result) && !check_record)
             			check_record++;
             	
-            		if(check_record && isalpha(*result))
+            	if(check_record && isalpha(*result))
     			break;
     			
-       	 }
+        }
 	
 	Write_File(fp_w, Head, record, node_number);
 	
     	fclose (fp_w);
+    	
+    	FILE *fp_create;
+    	fp_create = fopen("draw.csv","w+");
+    	
+    	Create_Draw_Csv_File(fp_create, Head, record, node_number);
+    	
+    	fclose (fp_create);
     
     	return;
 }

@@ -27,4 +27,6 @@ int Search(struct Record *Head, int y, int m, int d, int type, int bld);
 
 void Write_File(FILE *fp, struct Record *Head, int record, int node_number);
 
+void Create_Draw_Csv_File(FILE *fp, struct Record *Head, int record, int node_number);
+
 #endif
