@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include "first.h"
 
-#define DEBUG 0
+#define DEBUG 1
 #define MAX_NAME_LENGTH 100
 
 void create_marks_csv( int sim_or_det, int recommend_diet, int record_type, float weight, int gender, int age, float height ){

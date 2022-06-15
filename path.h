@@ -10,6 +10,6 @@
 
 //different record type have different struct
 
-void path(void);
+int path(void);
 
 #endif

@@ -11,7 +11,7 @@
 讀取csv檔的record
 根據path至函式執行
 */
-void path(void){
+int path(void){
 	
 	char file_name[MAXLENGTH];
 	
@@ -151,6 +151,8 @@ void path(void){
     	Create_Draw_Csv_File(fp_create, Head, record, node_number);
     	
     	fclose (fp_create);
+
+	system("python3 final.py");
     
-    	return;
+    	return recommended_diet;
 }

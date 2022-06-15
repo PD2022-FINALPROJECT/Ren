@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include "path.h"
 #include "Record.h"
+#include "RecommendCalories.h"
 
 //將csv檔內資料串成link list
 struct Record *Read_File(FILE *fp_r, int record){
@@ -138,6 +139,20 @@ void Insert(struct Record **Head, int record,  int gender, int age, float height
 	int y, m, d, b = 0;
 	float w, h;
 	
+	int count_cal = 0, whether_count;
+	printf("Do you want to calculate calories by the system\n");
+	printf("[1] Yes [2] No\n");
+	scanf("%d", &whether_count);
+	
+	while( !((whether_count == 1) || (whether_count == 2)) ){
+		printf("\nPlease input 1 or 2\n");
+		scanf("%d", &whether_count);
+	}
+	
+	if(whether_count == 1){
+		count_cal = count_calories();
+	}
+	
 	printf("\nPlease input the data as below\n");
 	printf("example:2022 5 5 58.2");
 	
@@ -158,6 +173,7 @@ void Insert(struct Record **Head, int record,  int gender, int age, float height
 			scanf("%d %d %d %f %f", &y, &m, &d, &w, &h);
 		}
 	}
+	
 	
 	if( record == 3 || record == 5 ){
 		printf("[1] breakfast [2] lunch [3] dinner\n");
